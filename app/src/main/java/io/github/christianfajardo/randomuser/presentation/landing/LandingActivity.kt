@@ -16,10 +16,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import io.github.christianfajardo.randomuser.BuildConfig
-import io.github.christianfajardo.randomuser.R
 import io.github.christianfajardo.randomuser.utils.Resource
 import io.github.christianfajardo.randomuser.utils.Constants
 import io.github.christianfajardo.randomuser.utils.print
+import io.github.christianfajardo.randomuser.R
+
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import javax.inject.Inject
 

@@ -1,4 +1,4 @@
-package io.github.christianfajardo.randomuser.utils
+package io.github.christianfajardo.randomuser.presentation
 
 import android.widget.ImageView
 import com.bumptech.glide.Glide

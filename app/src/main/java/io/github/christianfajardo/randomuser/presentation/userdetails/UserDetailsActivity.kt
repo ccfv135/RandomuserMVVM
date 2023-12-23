@@ -13,7 +13,8 @@ import android.widget.Toast
 import com.google.android.material.card.MaterialCardView
 import dagger.hilt.android.AndroidEntryPoint
 import io.github.christianfajardo.randomuser.R
-import io.github.christianfajardo.randomuser.utils.loadImage
+import io.github.christianfajardo.randomuser.presentation.loadImage
+
 
 
 @AndroidEntryPoint

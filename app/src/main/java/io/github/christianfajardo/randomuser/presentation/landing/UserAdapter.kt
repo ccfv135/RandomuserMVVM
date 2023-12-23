@@ -16,7 +16,8 @@ import io.github.christianfajardo.randomuser.R
 import io.github.christianfajardo.randomuser.domain.model.User
 import io.github.christianfajardo.randomuser.presentation.userdetails.UserDetailsActivity
 import io.github.christianfajardo.randomuser.presentation.userdetails.UserDetailsActivity.Companion.USER_DATA
-import io.github.christianfajardo.randomuser.utils.loadImage
+import io.github.christianfajardo.randomuser.presentation.loadImage
+
 import javax.inject.Inject
 
 /**

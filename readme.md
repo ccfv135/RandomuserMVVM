@@ -1,4 +1,4 @@
-# Randomuser App Task
+# RandomuserFriends App Task
 
 **Friends** is a native Android Application that uses [Random User API](https://randomuser.me/) for
 its backend.
