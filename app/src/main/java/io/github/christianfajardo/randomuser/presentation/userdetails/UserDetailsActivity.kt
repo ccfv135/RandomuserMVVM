@@ -10,15 +10,22 @@ import io.github.christianfajardo.randomuser.domain.model.User
 import android.content.Intent
 import android.net.Uri
 import android.widget.Toast
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.card.MaterialCardView
 import dagger.hilt.android.AndroidEntryPoint
 import io.github.christianfajardo.randomuser.R
 import io.github.christianfajardo.randomuser.presentation.loadImage
-
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 
 @AndroidEntryPoint
-class UserDetailsActivity : AppCompatActivity() {
+class UserDetailsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var ivPortraitDetails: ImageView
     private lateinit var tvFullNameDetails: TextView
@@ -31,6 +38,8 @@ class UserDetailsActivity : AppCompatActivity() {
     private lateinit var tvGenderDetails: TextView
     private lateinit var tvRegisteredDetails: TextView
     private lateinit var tvCoordinatesDetails: TextView
+    private lateinit var map: GoogleMap
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,15 +48,15 @@ class UserDetailsActivity : AppCompatActivity() {
         initViews()
         showUpButton()
         getUserData()
+        val mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
+        mapFragment.getMapAsync(this)
     }
+
 
     // shows the back button in the action bar
 
     private fun showUpButton() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-
-
-
     }
 
     // change the navigate up functionality to the onBackPressed
@@ -92,12 +101,18 @@ class UserDetailsActivity : AppCompatActivity() {
 
         tvFullNameDetails.text = "${user.name.first} ${user.name.last}"
         tvAddressDetails.text = user.location.street.name
-        tvCityDetails.text =
-            "${user.location.city}, ${user.location.state}, ${user.location.country}"
+        tvCityDetails.text = "${user.location.city}, ${user.location.state}, ${user.location.country}"
         tvEmailDetails.text = user.email
         tvCellPhoneDetails.text = user.cell
         tvGenderDetails.text= user.gender
-        tvRegisteredDetails.text= "${user.registered.age} ${user.registered.date}"
+
+        val registrationDateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault())
+        val registrationDate = registrationDateFormat.parse(user.registered.date)
+        val formattedRegistrationDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+            .format(registrationDate)
+
+        tvRegisteredDetails.text = formattedRegistrationDate
+
         tvCoordinatesDetails.text= "${user.location.coordinates.latitude} ${user.location.coordinates.longitude}"
 
 
@@ -119,8 +134,20 @@ class UserDetailsActivity : AppCompatActivity() {
         startActivity(Intent.createChooser(emailIntent, "Send email"))
     }
 
+    override fun onMapReady(googleMap: GoogleMap) {
+        map = googleMap
+        val coordinates = intent.getParcelableExtra<User>(USER_DATA)?.location?.coordinates
+        if (coordinates != null) {
+            val location = LatLng(coordinates.latitude.toDouble(), coordinates.longitude.toDouble())
+            map.addMarker(MarkerOptions().position(location).title("User's Location"))
+            map.moveCamera(CameraUpdateFactory.newLatLng(location))
+            map.animateCamera(CameraUpdateFactory.zoomTo(10.0f))
+        }
+    }
+
     companion object {
         const val USER_DATA = "user_data"
     }
+
 
 }
