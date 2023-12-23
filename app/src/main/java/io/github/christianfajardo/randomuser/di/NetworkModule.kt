@@ -23,8 +23,7 @@ class NetworkModule {
     @Provides
     fun providesHttpLoggingInterceptor(): HttpLoggingInterceptor {
 
-        // if the app is in debug mode, show the logs
-        // else don't show any log
+
         val levelType: HttpLoggingInterceptor.Level =
             if (BuildConfig.BUILD_TYPE.contentEquals("debug"))
                 HttpLoggingInterceptor.Level.BODY

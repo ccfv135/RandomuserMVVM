@@ -7,9 +7,9 @@ import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.ProgressBar
-import android.widget.SearchView
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -20,7 +20,6 @@ import io.github.christianfajardo.randomuser.utils.Resource
 import io.github.christianfajardo.randomuser.utils.Constants
 import io.github.christianfajardo.randomuser.utils.print
 import io.github.christianfajardo.randomuser.R
-
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import javax.inject.Inject
 
@@ -49,10 +48,52 @@ class LandingActivity : AppCompatActivity() {
         initViews() // initialises the views by their id
         observeViewModel() // sets up user list data observer from view model
         setUpRecyclerView() // sets up the recycler view
+        setupSearchView()
 
     }
 
+    private fun setupSearchView() {
+        searchView = findViewById(R.id.searchView)
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return false
+            }
 
+            override fun onQueryTextChange(newText: String?): Boolean {
+                if (newText.isNullOrBlank()) {
+                    // Recargar los datos del LiveData o hacer una nueva petición
+                    userViewModel.getUsers() // Esta llamada ya debería estar disparando la actualización
+                    compositeDisposable.add(
+                        userViewModel.userListFlowable.subscribe { resource ->
+                            when (resource) {
+                                is Resource.Success -> {
+                                    userAdapter.differ.submitList(resource.data)
+                                }
+                                // Manejo de otros estados (Loading, Error) si es necesario
+                            }
+                        }
+                    )
+                    return true
+                }
+                rvFriends.visibility = View.VISIBLE
+                val userAdapterList = userAdapter.getList()
+                val filteredList = if (!newText.isNullOrBlank()) {
+                    val list=userAdapterList.filter { user ->
+                        val fullName = "${user.name.first} ${user.name.last}"
+                        fullName.contains(newText, ignoreCase = true) ||
+                                user.email.contains(newText, ignoreCase = true)
+                    }
+                    list
+
+                } else {
+                    Log.d("No","No action")
+                    emptyList()
+                }
+                userAdapter.differ.submitList(filteredList)
+                return true
+            }
+        })
+    }
 
 
     private fun initViews() {
@@ -123,11 +164,10 @@ class LandingActivity : AppCompatActivity() {
 
 
     override fun onStop() {
-        if (!compositeDisposable.isDisposed) {
-            compositeDisposable.dispose()
-        }
+        compositeDisposable.clear()
         super.onStop()
     }
+
 
     // shows snack bar based on error type
     // if the error is due to the internet connection is off
@@ -208,7 +248,6 @@ class LandingActivity : AppCompatActivity() {
 
         }
     }
-
 
 
     // launch wifi settings in another task

@@ -20,11 +20,7 @@ import io.github.christianfajardo.randomuser.presentation.loadImage
 
 import javax.inject.Inject
 
-/**
- * It will determine the children of user recycler view
- *
- * It works as a bridge between the recycler view and the user list item
- */
+
 class UserAdapter @Inject constructor() : RecyclerView.Adapter<UserAdapter.UserViewHolder>() {
 
 
@@ -37,10 +33,7 @@ class UserAdapter @Inject constructor() : RecyclerView.Adapter<UserAdapter.UserV
         private var mcvUserCard: MaterialCardView = view.findViewById(R.id.mcvUserCard)
 
 
-        /**
-         * Will bind the user object to the
-         * user list card view
-         */
+
         @SuppressLint("SetTextI18n")
         fun bindTo(user: User) {
             tvFullName.text = "${user.name.first} ${user.name.last}"
@@ -72,6 +65,8 @@ class UserAdapter @Inject constructor() : RecyclerView.Adapter<UserAdapter.UserV
 
         holder.bindTo(user)
     }
+
+    fun getList ()=differ.currentList
 
     override fun getItemCount(): Int = differ.currentList.size
 
