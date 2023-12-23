@@ -1,6 +1,6 @@
 # RandomuserFriends App Task
 
-**Friends** is a native Android Application that uses [Random User API](https://randomuser.me/) for
+**Randomuser** is a native Android Application that uses [Random User API](https://randomuser.me/) for
 its backend.
 
 This app follows MVVM architecture and uses Dagger-Hilt for dependency injection.
