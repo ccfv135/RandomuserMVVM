@@ -46,8 +46,8 @@ class NetworkModule {
         OkHttpClient
             .Builder()
             .addInterceptor(httpLoggingInterceptor)
-            .readTimeout(10L, TimeUnit.SECONDS) // the request will be cancelled after 10 seconds
-            .writeTimeout(10L, TimeUnit.SECONDS) // the request will be cancelled after 10 seconds
+            .readTimeout(10L, TimeUnit.SECONDS)
+            .writeTimeout(10L, TimeUnit.SECONDS)
             .build()
 
 

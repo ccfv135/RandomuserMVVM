@@ -43,7 +43,6 @@ class UserAdapter @Inject constructor() : RecyclerView.Adapter<UserAdapter.UserV
 
             mcvUserCard.setOnClickListener {
                 val intent = Intent(view.context, UserDetailsActivity::class.java)
-                // passes the user object to the user details activity
                 intent.putExtra(USER_DATA, user)
                 context.startActivity(intent)
             }
@@ -78,8 +77,6 @@ class UserAdapter @Inject constructor() : RecyclerView.Adapter<UserAdapter.UserV
 
             override fun areContentsTheSame(oldItem: User, newItem: User): Boolean {
 
-                // as only image, country, and name would be shown,
-                // no need to add comparison between other contents
 
                 if (oldItem.location.country != newItem.location.country) {
                     return false
@@ -102,11 +99,6 @@ class UserAdapter @Inject constructor() : RecyclerView.Adapter<UserAdapter.UserV
         }
 
 
-    /**
-     * This will consume the list of users from the user list live data
-     *
-     * and will present the data in the UI
-     */
     val differ = AsyncListDiffer(this, diffCallback)
 
 }

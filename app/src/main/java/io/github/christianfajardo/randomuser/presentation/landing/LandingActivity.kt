@@ -45,9 +45,9 @@ class LandingActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_landing)
-        initViews() // initialises the views by their id
-        observeViewModel() // sets up user list data observer from view model
-        setUpRecyclerView() // sets up the recycler view
+        initViews()
+        observeViewModel()
+        setUpRecyclerView()
         setupSearchView()
 
     }
@@ -61,15 +61,13 @@ class LandingActivity : AppCompatActivity() {
 
             override fun onQueryTextChange(newText: String?): Boolean {
                 if (newText.isNullOrBlank()) {
-                    // Recargar los datos del LiveData o hacer una nueva petición
-                    userViewModel.getUsers() // Esta llamada ya debería estar disparando la actualización
+                    userViewModel.getUsers()
                     compositeDisposable.add(
                         userViewModel.userListFlowable.subscribe { resource ->
                             when (resource) {
                                 is Resource.Success -> {
                                     userAdapter.differ.submitList(resource.data)
                                 }
-                                // Manejo de otros estados (Loading, Error) si es necesario
                             }
                         }
                     )
@@ -115,9 +113,6 @@ class LandingActivity : AppCompatActivity() {
                     when (resource) {
 
                         is Resource.Loading -> {
-                            // if it is loading,
-
-                            // show the loading bar
                             pbLoading.visibility = View.VISIBLE
                             ivNoInternet.visibility = View.GONE
 
@@ -125,35 +120,24 @@ class LandingActivity : AppCompatActivity() {
 
                         is Resource.Error -> {
 
-                            // if there is an error,
-
-                            // hide the loading bar
                             pbLoading.visibility = View.GONE
                             ivNoInternet.visibility = View.VISIBLE
 
 
-                            // log the error message if its a debug build
                             if (BuildConfig.DEBUG) {
                                 Log.e(tag, "setUpObserver: ${resource.message}")
                             }
 
-                            // show snack bar based on the error type
+
                             showErrorSnackBar()
                         }
 
                         is Resource.Success -> {
 
-                            // if there was no error,
 
-                            // hide the loading bar
                             pbLoading.visibility = View.GONE
                             ivNoInternet.visibility = View.GONE
-
-                            // show the recycler view
                             rvFriends.visibility = View.VISIBLE
-
-
-                            // and make the adapter differ consume the user list
                             userAdapter.differ.submitList(resource.data)
                         }
                     }
@@ -169,26 +153,23 @@ class LandingActivity : AppCompatActivity() {
     }
 
 
-    // shows snack bar based on error type
-    // if the error is due to the internet connection is off
-    // then it would show to turn on the internet
     private fun showErrorSnackBar() {
 
-        // create a snack bar with generic body, which can be changed based on the situation
+
         val snackBar = Snackbar.make(parentLayout, "Something went wrong", Snackbar.LENGTH_SHORT)
 
 
         compositeDisposable.add(userViewModel.internetStatus.subscribe { internetStatus ->
             if (!internetStatus) {
 
-                // shows this snack bar when internet is turned off
+
                 snackBar.setText("Your Internet Connection is off")
 
                 snackBar.setAction(
                     "TURN ON"
                 ) {
                     try {
-                        // to turn on the wifi launch the wifi settings
+
                         launchWifiSettings()
                         userViewModel.userListFlowable.retry()
 
@@ -197,8 +178,6 @@ class LandingActivity : AppCompatActivity() {
 
                         e.print(tag, "launchwifi set")
 
-                        // if for some reason the wifi settings page could not be opened
-                        // show another toast message to inform the user it
                         snackBar.setText("Could not open Wi-Fi settings")
                         snackBar.show()
 
@@ -215,21 +194,12 @@ class LandingActivity : AppCompatActivity() {
 
     }
 
-    // sets up the recycler with view adapter, layout manager and other configurations
     private fun setUpRecyclerView() {
 
 
         rvFriends.apply {
 
-            /*
-                 if the device is in landscape mode, recycler view
-                 will show a grid view with 2 span count.
 
-                 and if it is in portrait mode, this will
-                 show a linear layout with 1 span count
-             */
-
-            // span count in grid view
             val gridViewItemAmount: Int = 3
 
             layoutManager =
@@ -237,23 +207,22 @@ class LandingActivity : AppCompatActivity() {
                     GridLayoutManager(
                         this@LandingActivity,
                         gridViewItemAmount
-                    ) // for landscape mode
+                    )
                 } else {
-                    LinearLayoutManager(this@LandingActivity) // for portrait mode
+                    LinearLayoutManager(this@LandingActivity)
                 }
 
             adapter = userAdapter
 
-            overScrollMode = View.OVER_SCROLL_NEVER // hide the overscroll effect
+            overScrollMode = View.OVER_SCROLL_NEVER
 
         }
     }
 
 
-    // launch wifi settings in another task
+
     private fun launchWifiSettings() {
         val intent = Intent(Constants.WIFI_SETTING_ACTION)
-        // opens the new activity in another task
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
         startActivity(intent)
     }
