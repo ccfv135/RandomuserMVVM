@@ -17,3 +17,4 @@ This app follows MVVM architecture and uses Dagger-Hilt for dependency injection
 2. **GSON**, for JSON serialisation
 3. **Dagger-Hilt**, for dependency Injection
 4. **Glide**, for image loading.
+5. **GoogleMaps**, for fragment coordinates
