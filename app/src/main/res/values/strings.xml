@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">Contactos</string>
+    <string name="contentDescriptionUserProfilePhoto">User\'s Profile Picture</string>
+    <string name="full_name">Full Name</string>
+    <string name="address">Address</string>
+    <string name="city_state_and_country">City, State, and Country</string>
+    <string name="email">Email</string>
+    <string name="phone">Phone</string>
+    <string name="nombres_y_apellidos">Nombres y apellidos</string>
+    <string name="email_tittle">Email</string>
+    <string name="map_icon">Map Icon</string>
+    <string name="phone_tittle">Teléfono</string>
+    <string name="address_tittle">Dirección</string>
+    <string name="gender_tittle">Género</string>
+    <string name="gender">Gender</string>
+    <string name="registered_tittle">Fecha de registro</string>
+    <string name="registered">Date</string>
+    <string name="coordinates">Coordenadas</string>
+</resources>
